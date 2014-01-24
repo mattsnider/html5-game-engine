@@ -88,9 +88,10 @@ var Board = (function () {
 		 * @return {jQuery} A jQuery element.
 		 */
 		get: function(iX, iY, iXn, iYn) {
-			var $el = $(),
-				args = arguments,
-				i, j;
+			var $el = $();
+			var args = arguments;
+			var i;
+			var j;
 
 			for (i = 0, j = args.length; i < j; i += 2) {
 				iX = args[i];
@@ -113,7 +114,8 @@ var Board = (function () {
 		 * @return {array} A position.
 		 */
 		getRandomEmptyPosition: function(aPos, aPosN) {
-			var iX, iY;
+			var iX;
+			var iY;
 
 			do {
 				iX = $.MS.randomInt(this.iXLen - 1);
@@ -138,8 +140,12 @@ var Board = (function () {
 		 * @param oBoardObject {BoardObject} Required. The board object to render.
 		 */
 		renderIn: function(oBoardObject) {
-			var aPos = oBoardObject.position(),
-					i, j, aListObjects, sKey;
+			var aPos = oBoardObject.position();
+			var i;
+			var j;
+			var aListObjects;
+			var sKey;
+
 			$(this.get.apply(this, aPos)).addClass(oBoardObject.getCellClass());
 
 			// iterate over the position tuples and insert into the object map
@@ -156,8 +162,10 @@ var Board = (function () {
 		 * @param oBoardObject {BoardObject} Required. The board object to remove.
 		 */
 		renderOut: function(oBoardObject) {
-			var aPos = oBoardObject.position(),
-					i, j, sKey;
+			var aPos = oBoardObject.position();
+			var i;
+			var j;
+			var sKey;
 
 			function fnGrep(o) {
 				return o !== oBoardObject;
@@ -193,8 +201,8 @@ var Board = (function () {
 		 * Render the full board.
 		 */
 		render: function() {
-			var that = this,
-				aNodes = [];
+			var that = this;
+			var aNodes = [];
 
 			that.$node.css('visibility', 'hidden');
 			that.oMatrix = [];

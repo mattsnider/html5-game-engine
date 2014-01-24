@@ -14,7 +14,7 @@
 		}
 
 		if (!oWindow.requestAnimationFrame) {
-			oWindow.requestAnimationFrame = function (callback, element) {
+			oWindow.requestAnimationFrame = function (callback) {
 				var currTime = new Date().getTime();
 				var timeToCall = Math.max(0, 16 - (currTime - lastTime));
 				var id = oWindow.setTimeout(function () {
@@ -99,8 +99,8 @@
 			 */
 			trigger:function (sEvent, oMessage) {
 				console.log('trigger event: ' + sEvent);
-				var that = this,
-						dNow = new Date();
+				var that = this;
+				var dNow = new Date();
 
 				$.each(this.getEvent(sEvent), function (i, aData) {
 					aData[0].call(that, {
