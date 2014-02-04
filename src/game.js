@@ -85,8 +85,10 @@ var Game = (function() {
 		},
 
 		reset: function() {
+			console.log('reset');
 			this.aAssets = [];
 			this.bPaused = true;
+			this.bTerminal = true;
 			this.dCycleTime = null;
 			this.iKeyQueue = [0, 0];
 			this.iCycle = 0;
@@ -98,6 +100,11 @@ var Game = (function() {
 		},
 
 		runner: function() {
+			// special-case logic, to stop thread, because cancelAnimationFrame
+			// is not working as expected.
+			if (this.bTerminal) {
+				return;
+			}
 			// the long interval has passed, go ahead and process next game cycle
 			if (this.dCycleTime + this.iCycleInterval <= (new Date()).getTime()) {
 				this.iCycle++;
@@ -119,19 +126,23 @@ var Game = (function() {
 		},
 
 		start: function() {
+			console.log('start');
+			this.bTerminal = false;
 			this.runner();
 			this.iCycle = 0;
 			this.dCycleTime = (new Date()).getTime();
-			this.trigger(Game.sGameStartEvent);
+			this.fire(Game.sGameStartEvent);
 
 			this.on(Game.sGameOverEvent, this._handleGameOver);
 			this.on(Game.sGameWinEvent, this._handleWin);
 		},
 
 		stop: function() {
-			clearInterval(this.iAnimationId);
+			console.log('stop - ' + this.iAnimationId);
+			window.cancelAnimationFrame(this.iAnimationId);
+			this.bTerminal = true;
 			this.iAnimationId = 0;
-			this.trigger(Game.sGameEndEvent);
+			this.fire(Game.sGameEndEvent);
 			this.off(Game.sGameOverEvent, this._handleGameOver);
 			this.off(Game.sGameWinEvent, this._handleWin);
 		}

@@ -2,10 +2,9 @@
 	'use strict';
 
 	// animation frame polyfill from http://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
-	(function () {
+	(function (oWindow) {
 		var lastTime = 0;
 		var vendors = ['webkit', 'moz'];
-		var oWindow = window;
 		for (var x = 0; x < vendors.length && !oWindow.requestAnimationFrame; ++x) {
 			oWindow.requestAnimationFrame = oWindow[vendors[x] + 'RequestAnimationFrame'];
 			oWindow.cancelAnimationFrame =
@@ -31,7 +30,7 @@
 				clearTimeout(id);
 			};
 		}
-	}());
+	}(window));
 
 	$.MS = {
 		RX_INJECT_ARR:/\{(\d+)\}/g,
@@ -97,7 +96,7 @@
 			 * @param oMessage {*} Optional. The event message, usually text, but
 			 *         can be an object for more complicated events.
 			 */
-			trigger:function (sEvent, oMessage) {
+			fire:function (sEvent, oMessage) {
 				console.log('trigger event: ' + sEvent);
 				var that = this;
 				var dNow = new Date();

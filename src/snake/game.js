@@ -187,8 +187,8 @@ var GameSnake = (function () {
 
 					// if the collision was not a powerup, then game over man
 					if (!bPowerUp) {
-						this.trigger(Game.sGameOverEvent);
-						break;
+						this.fire(Game.sGameOverEvent);
+						return;
 					}
 			}
 
