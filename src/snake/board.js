@@ -43,23 +43,14 @@ var BoardSnake = (function () {
       var i = 0;
       var iX, iY;
 
-      // create a new array and insert an empty value at the beginning,
-      // so this can be used as an arguments array
-      if (bHasExcludedPositions) {
-        aExcludedPositions = aExcludedPositions.slice(0);
-        aExcludedPositions.unshift(null);
-      }
-
       while (iWhileLimit-- && i < oOptions.iNumInternalWall) {
         iX = $.MS.randomInt(this.iXLen) - 1;
         iY = $.MS.randomInt(this.iYLen) - 1;
 
         // check that this is not an excluded position
         if (bHasExcludedPositions) {
-          aExcludedPositions[0] = [iX, iY];
-
           // if the current point is excluded, then continue
-          if ($.MS.pointEq.apply(this, aExcludedPositions)) {
+          if ($.MS.pointIn([iX, iY], aExcludedPositions)) {
             continue;
           }
         }

@@ -163,23 +163,38 @@
     /**
      * Evaluate if the first point is equal to any of the other points.
      * @param aPosNeedle {array} Required. A point to search with.
+     * @param aPosHaystack {array} Required. An array of points.
+     * @param iStartIndex {int} Optional. An index to start looking in
+     * haystack.
+     * @return {boolean} The first points equals a point in the set of points.
+     */
+    pointIn: function(aPosNeedle, aPosHaystack, iStartIndex) {
+      // iterate over the haystack, native array for max efficiency
+      for (var i = iStartIndex || 0, j = aPosHaystack.length - 1; i < j;
+           i += 1) {
+        if (aPosNeedle[0] === aPosHaystack[i][0] &&
+            aPosNeedle[1] === aPosHaystack[i][1]) {
+          // fast return, once we match
+          return true;
+        }
+      }
+
+      return false;
+    },
+
+    /**
+     * Evaluate if the first point is equal to any of the other points.
+     * @param aPosNeedle {array} Required. A point to search with.
      * @param aPosHaystack1 {array} Required. A point point in the
      * search space.
      * @param aPosHaystackN {array} Required. Any number of additional
      *         points to compare.
      * @return {boolean} The first points equals a point in the set of points.
      */
-    pointEq: function(aPosNeedle, aPosHaystack1, aPosHaystackN) {
-      // todo: break this into an arguments and an array version
-      for (var i = 1, j = arguments.length - 1; i < j; i += 1) {
-        aPosHaystackN = arguments[i];
-        if (aPosNeedle[0] === aPosHaystackN[0] &&
-            aPosNeedle[1] === aPosHaystackN[1]) {
-          return true;
-        }
-      }
-
-      return false;
+    pointInArgs: function(aPosNeedle, aPosHaystack1, aPosHaystackN) {
+      // delegate to array-based pointIn, but ignore the first
+      // argument (aPosNeedle)
+      return $.MS.pointIn(aPosNeedle, arguments, 1);
     },
 
     /**
