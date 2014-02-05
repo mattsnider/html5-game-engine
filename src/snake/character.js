@@ -1,29 +1,35 @@
 var CharacterSnake = (function () {
-	'use strict';
+  'use strict';
 
-	return $.MS.extend(function CharacterSnake(el, oConf) {
-		this.super(Character, arguments);
-	}, Character, {
+  var CharacterSnake = $.MS.extend(function CharacterSnake(el, oConf) {
+    this.super(Character, arguments);
+  }, Character, {
 
-		increaseSize: function() {
-			this.aPosition.unshift(undefined, undefined);
-		},
+    increaseSize: function() {
+      this.aPosition.unshift(undefined, undefined);
+    },
 
-		// @override
-		position: function(iX, iY, iXn, iYn) {
-			if (iX && iY) {
-				if (this.aPosition[0] === undefined) {
-					this.aPosition[0] = iX;
-					this.aPosition[1] = iY;
-				}
-				else {
-					this.aPosition.pop();
-					this.aPosition.pop();
-					this.aPosition.unshift(iX, iY);
-				}
-			}
+    // @override
+    position: function(iX, iY, iXn, iYn) {
+      if ((iX || 0 === iX) && (iY || 0 === iY)) {
+        if (this.aPosition[0] === undefined) {
+          this.aPosition[0] = iX;
+          this.aPosition[1] = iY;
+        }
+        else {
+          this.aPosition.pop();
+          this.aPosition.pop();
+          this.aPosition.unshift(iX, iY);
+        }
+      }
 
-			return this.aPosition;
-		}
-	});
+      return this.aPosition;
+    }
+  });
+
+  $.extend(CharacterSnake, {
+    DefaultStartPosition: [1, 1]
+  });
+
+  return CharacterSnake;
 }());

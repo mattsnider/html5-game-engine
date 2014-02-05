@@ -1,15 +1,15 @@
 (function() {
-	'use strict';
+  'use strict';
 
-	var game = new GameSnake();
-	game.start();
+  var game = new GameSnake();
+  game.start();
 
-	// todo: move this into a game controller system
-	$(document).keydown(function(e) {
-		game.setKey(e.keyCode);
-	});
+  // todo: move this into a game controller system
+  $(document).keydown(function(e) {
+    game.setKey(e.keyCode);
+  });
 
-	$(document).keyup(function(e) {
-		game.setKey(0);
-	});
+  $(document).keyup(function(e) {
+    game.setKey(0);
+  });
 }());
