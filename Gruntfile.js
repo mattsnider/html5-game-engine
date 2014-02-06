@@ -41,6 +41,17 @@ module.exports = function(grunt) {
 			}
 		},
 
+    cssmin: {
+      css: {
+				src: 'build/<%= pkg.name %>.css',
+				dest: 'build/<%= pkg.name %>.min.css'
+      },
+			snake_css: {
+				src: 'build/<%= pkg.name %>-snake.css',
+				dest: 'build/<%= pkg.name %>-snake.min.css'
+			}
+    },
+
 		// lint the JavaScript files
 		jshint: {
 			// define the files to lint
@@ -106,18 +117,10 @@ module.exports = function(grunt) {
 					join_vars: true
 				}
 			},
-//			css: {
-//				src: 'build/<%= pkg.name %>.css',
-//				dest: 'build/<%= pkg.name %>.min.css'
-//			},
 			js: {
 				src: 'build/<%= pkg.name %>.js',
 				dest: 'build/<%= pkg.name %>.min.js'
 			},
-//			snake_css: {
-//				src: 'build/<%= pkg.name %>-snake.css',
-//				dest: 'build/<%= pkg.name %>-snake.min.css'
-//			},
 			snake_js: {
 				src: 'build/<%= pkg.name %>-snake.js',
 				dest: 'build/<%= pkg.name %>-snake.min.js'
@@ -134,7 +137,10 @@ module.exports = function(grunt) {
 	// Load the plugin that provides the "uglify" task.
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
+  // Load the plugin that provided the "cssmin" task.
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+
 	grunt.registerTask(
-			'default', ['jshint', 'concat', 'uglify']);
+			'default', ['jshint', 'concat', 'cssmin', 'uglify']);
 
 };
