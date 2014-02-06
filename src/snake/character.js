@@ -4,6 +4,11 @@ var CharacterSnake = (function () {
   var CharacterSnake = $.MS.extend(function CharacterSnake(el, oConf) {
     this.super(Character, arguments);
   }, Character, {
+    // @override
+    getCellClass: function() {
+      return this.super(Character, arguments, 'getCellClass') + ' ' +
+             CharacterSnake.DefaultClass;
+    },
 
     increaseSize: function() {
       this.aPosition.unshift(undefined, undefined);
@@ -28,7 +33,8 @@ var CharacterSnake = (function () {
   });
 
   $.extend(CharacterSnake, {
-    DefaultStartPosition: [1, 1]
+    DefaultClass: 'ge-board-snake-character',
+    DefaultStartPosition: [0, 1]
   });
 
   return CharacterSnake;

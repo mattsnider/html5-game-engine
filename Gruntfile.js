@@ -11,14 +11,26 @@ module.exports = function(grunt) {
 		concat: {
 			options: {
 			},
-			build: {
+			css: {
+				src: [
+					'src/game.css'
+				],
+				dest: 'build/<%= pkg.name %>.css'
+			},
+			js: {
 				src: [
 					'src/init.js', 'src/board_object.js', 'src/board.js',
 					'src/character.js', 'src/game.js'
 				],
 				dest: 'build/<%= pkg.name %>.js'
 			},
-			snake: {
+			snake_css: {
+				src: [
+          'src/game.css', 'src/snake/game.css'
+				],
+				dest: 'build/<%= pkg.name %>-snake.css'
+			},
+			snake_js: {
 				src: [
 					'src/init.js', 'src/board_object.js', 'src/board.js',
 					'src/character.js', 'src/game.js', 'src/snake/board.js',
@@ -94,11 +106,19 @@ module.exports = function(grunt) {
 					join_vars: true
 				}
 			},
-			build: {
+//			css: {
+//				src: 'build/<%= pkg.name %>.css',
+//				dest: 'build/<%= pkg.name %>.min.css'
+//			},
+			js: {
 				src: 'build/<%= pkg.name %>.js',
 				dest: 'build/<%= pkg.name %>.min.js'
 			},
-			snake: {
+//			snake_css: {
+//				src: 'build/<%= pkg.name %>-snake.css',
+//				dest: 'build/<%= pkg.name %>-snake.min.css'
+//			},
+			snake_js: {
 				src: 'build/<%= pkg.name %>-snake.js',
 				dest: 'build/<%= pkg.name %>-snake.min.js'
 			}

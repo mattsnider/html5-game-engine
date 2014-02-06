@@ -1,0 +1,24 @@
+/***** Begin Snake CSS *****/
+
+.ge-board-cell-snake {
+  height: 20px;
+  width: 20px
+}
+
+.ge-board-snake-invalid {
+  background-color: #999
+}
+
+.ge-board-character-enemy {
+  background-color: #f00
+}
+
+.ge-board-snake-pu {
+  background-color: #900
+}
+
+.ge-board-snake-character {
+  background-color: #333
+}
+
+/***** End Snake CSS *****/
