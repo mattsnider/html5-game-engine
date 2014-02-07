@@ -5,7 +5,9 @@ var Game = (function() {
     // initialize local shorthand
     var oCfg = oConf || {};
 
-    // initialize from configuration
+    // scoreboard is shown by default or when option is true
+    this.bHasScoreBoard = oCfg.bHasScoreBoard ||
+                          oCfg.bHasScoreBoard === undefined;
     this.iAnimationId = 0;
     this.iCycleInterval = oCfg.iCycleInterval || Game.iDefaultCycleInterval;
     this.reset();
@@ -18,6 +20,7 @@ var Game = (function() {
     sGameOverEvent: 'GameOver',
     sGameStartEvent: 'GameStart',
     sGameWinEvent: 'GameWin',
+    sPointEvent: 'Point',
     sStageEndEvent: 'StageEnd',
     sStageOverEvent: 'StageOver',
     sStageStartEvent: 'StageStart',
@@ -71,6 +74,18 @@ var Game = (function() {
     },
 
     /**
+     * Point event callback.
+     * @private
+     */
+    _handlePoint: function(e) {
+      this.iTotalPoints += e.message;
+
+      if (this.oScoreBoard) {
+        this.oScoreBoard.update(this.iTotalPoints);
+      }
+    },
+
+    /**
      * Win event callback.
      * @private
      */
@@ -94,14 +109,16 @@ var Game = (function() {
       this.bPaused = true;
       this.bTerminal = true;
       this.dCycleTime = null;
-      this.iKeyQueue = [0, 0];
       this.iCycle = 0;
+      this.iKeyQueue = [0, 0];
+      this.iTotalPoints = 0;
 
       if (this.iAnimationId) {
         this.stop();
 
         // prevent duplicate listeners
         this.off(Game.sGameOverEvent, this._handleGameOver);
+        this.off(Game.sPointEvent, this._handlePoint);
         this.off(Game.sGameWinEvent, this._handleWin);
 
         this.start();
@@ -145,6 +162,12 @@ var Game = (function() {
 
       this.on(Game.sGameOverEvent, this._handleGameOver);
       this.on(Game.sGameWinEvent, this._handleWin);
+      this.on(Game.sPointEvent, this._handlePoint);
+
+      if (this.bHasScoreBoard && !this.oScoreBoard) {
+        this.oScoreBoard = new ScoreBoard(this.assets(Board)[0]);
+        this.oScoreBoard.render();
+      }
     },
 
     stop: function() {

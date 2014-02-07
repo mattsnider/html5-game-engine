@@ -18,3 +18,9 @@
 .ge-board-character {
   background-color: #333
 }
+
+.ge-score-board {
+  border: 2px inset #333;
+  padding: 0.25em 1em;
+  position: absolute;
+}

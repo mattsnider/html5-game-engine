@@ -32,9 +32,15 @@ module.exports = function(grunt) {
 			},
 			snake_js: {
 				src: [
-					'src/init.js', 'src/board_object.js', 'src/board.js',
-					'src/character.js', 'src/game.js', 'src/snake/board.js',
-					'src/snake/character.js', 'src/snake/game.js',
+					'src/init.js',
+          'src/board_object.js',
+          'src/board.js',
+					'src/character.js',
+          'src/score_board.js',
+          'src/game.js',
+          'src/snake/board.js',
+					'src/snake/character.js',
+          'src/snake/game.js',
 					'src/snake/main.js'
 				],
 				dest: 'build/<%= pkg.name %>-snake.js'

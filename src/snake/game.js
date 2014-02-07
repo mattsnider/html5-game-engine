@@ -17,7 +17,8 @@ var GameSnake = (function () {
   });
 
   $.extend(PowerUp, {
-    DefaultClass: 'ge-board-snake-pu'
+    DefaultClass: 'ge-board-snake-pu',
+    DefaultPoints: 10
   });
 
   return $.MS.extend(function GameSnake(el, oConf) {
@@ -147,6 +148,7 @@ var GameSnake = (function () {
       oBoard.renderOut(oCharacter);
 
       if (bPowerUp) {
+        this.fire(Game.sPointEvent, PowerUp.DefaultPoints);
         oCharacter.increaseSize();
       }
 
