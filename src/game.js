@@ -17,7 +17,11 @@ var Game = (function() {
     sGameEndEvent: 'GameEnd',
     sGameOverEvent: 'GameOver',
     sGameStartEvent: 'GameStart',
-    sGameWinEvent: 'GameWin'
+    sGameWinEvent: 'GameWin',
+    sStageEndEvent: 'StageEnd',
+    sStageOverEvent: 'StageOver',
+    sStageStartEvent: 'StageStart',
+    sStageWinEvent: 'StageWin'
   });
 
   $.extend(Game.prototype, {
@@ -95,6 +99,11 @@ var Game = (function() {
 
       if (this.iAnimationId) {
         this.stop();
+
+        // prevent duplicate listeners
+        this.off(Game.sGameOverEvent, this._handleGameOver);
+        this.off(Game.sGameWinEvent, this._handleWin);
+
         this.start();
       }
     },
@@ -105,6 +114,7 @@ var Game = (function() {
       if (this.bTerminal) {
         return;
       }
+
       // the long interval has passed, go ahead and process next game cycle
       if (this.dCycleTime + this.iCycleInterval <= (new Date()).getTime()) {
         this.iCycle++;
@@ -143,8 +153,6 @@ var Game = (function() {
       this.bTerminal = true;
       this.iAnimationId = 0;
       this.fire(Game.sGameEndEvent);
-      this.off(Game.sGameOverEvent, this._handleGameOver);
-      this.off(Game.sGameWinEvent, this._handleWin);
     }
   }, $.MS.CE);
 
