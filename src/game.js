@@ -143,6 +143,12 @@ var Game = (function() {
           $.proxy(this, 'runner'));
     },
 
+    /**
+     * Interface to pass keycodes into the game. If a key handler function
+     * is defined, then it will return true, otherwise false.
+     * @param iKeyCode {int} Required. The keycode to set.
+     * @return {Boolean} Keycode function is defined.
+     */
     setKey: function(iKeyCode) {
       if (!this.iKeyQueue[0]) {
         this.iKeyQueue[0] = iKeyCode;
@@ -150,6 +156,8 @@ var Game = (function() {
       else {
         this.iKeyQueue[1] = iKeyCode;
       }
+
+      return !!this[iKeyCode];
     },
 
     start: function() {
