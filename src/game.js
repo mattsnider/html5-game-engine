@@ -16,15 +16,17 @@ var Game = (function() {
   $.extend(Game, {
     /* controls the speed of the game */
     iDefaultCycleInterval: 200,
-    sGameEndEvent: 'GameEnd',
-    sGameOverEvent: 'GameOver',
-    sGameStartEvent: 'GameStart',
-    sGameWinEvent: 'GameWin',
-    sPointEvent: 'Point',
-    sStageEndEvent: 'StageEnd',
-    sStageOverEvent: 'StageOver',
-    sStageStartEvent: 'StageStart',
-    sStageWinEvent: 'StageWin'
+    sGameEndEvent: 'GameEndEvent',
+    sGameOverEvent: 'GameOverEvent',
+    sGameStartEvent: 'GameStartEvent',
+    sGameWinEvent: 'GameWinEvent',
+    sBeforePauseEvent: 'BeforePauseEvent',
+    sPauseEvent: 'PauseEvent',
+    sPointEvent: 'PointEvent',
+    sStageEndEvent: 'StageEndEvent',
+    sStageFailEvent: 'StageFailEvent',
+    sStageStartEvent: 'StageStartEvent',
+    sStageWinEvent: 'StageWinEvent'
   });
 
   $.extend(Game.prototype, {
@@ -65,12 +67,37 @@ var Game = (function() {
     },
 
     /**
+     * Game end event callback.
+     * @private
+     */
+    _handleGameEnd: function() {
+      // do nothing here
+    },
+
+    /**
      * Game over event callback.
      * @private
      */
     _handleGameOver: function() {
       this.stop();
       alert('Game Over');
+    },
+
+    /**
+     * Game start event callback.
+     * @private
+     */
+    _handleGameStart: function() {
+      // do nothing here
+    },
+
+    /**
+     * Win event callback.
+     * @private
+     */
+    _handleGameWin: function() {
+      this.stop();
+      alert('Winner');
     },
 
     /**
@@ -86,21 +113,15 @@ var Game = (function() {
     },
 
     /**
-     * Win event callback.
-     * @private
-     */
-    _handleWin: function() {
-      this.stop();
-      alert('Winner');
-    },
-
-    /**
      * Pause the game or set the pause state to the provided boolean.
      * @param {boolean} bPaused Optional. The new pause state.
      */
     pause: function(bPaused) {
-      console.log('Pause called with - ' + bPaused);
-      this.bPaused = bPaused || false;
+      if (false !== this.fire(Game.sBeforePauseEvent, bPaused)) {
+        console.log('Pause called with - ' + bPaused);
+        this.bPaused = bPaused || false;
+        this.fire(Game.sPauseEvent, bPaused);
+      }
     },
 
     reset: function() {
@@ -113,14 +134,22 @@ var Game = (function() {
       this.iKeyQueue = [0, 0];
       this.iTotalPoints = 0;
 
+      // prevent duplicate listeners
+      this.off(Game.sGameEndEvent, this._handleGameEnd);
+      this.off(Game.sGameOverEvent, this._handleGameOver);
+      this.off(Game.sGameStartEvent, this._handleGameStart);
+      this.off(Game.sGameWinEvent, this._handleGameWin);
+      this.off(Game.sPointEvent, this._handlePoint);
+
+      // register events as part of start
+      this.on(Game.sGameEndEvent, this._handleGameEnd);
+      this.on(Game.sGameOverEvent, this._handleGameOver);
+      this.on(Game.sGameStartEvent, this._handleGameStart);
+      this.on(Game.sGameWinEvent, this._handleGameWin);
+      this.on(Game.sPointEvent, this._handlePoint);
+
       if (this.iAnimationId) {
         this.stop();
-
-        // prevent duplicate listeners
-        this.off(Game.sGameOverEvent, this._handleGameOver);
-        this.off(Game.sPointEvent, this._handlePoint);
-        this.off(Game.sGameWinEvent, this._handleWin);
-
         this.start();
       }
     },
@@ -166,16 +195,14 @@ var Game = (function() {
       this.runner();
       this.iCycle = 0;
       this.dCycleTime = (new Date()).getTime();
-      this.fire(Game.sGameStartEvent);
-
-      this.on(Game.sGameOverEvent, this._handleGameOver);
-      this.on(Game.sGameWinEvent, this._handleWin);
-      this.on(Game.sPointEvent, this._handlePoint);
 
       if (this.bHasScoreBoard && !this.oScoreBoard) {
         this.oScoreBoard = new ScoreBoard(this.assets(Board)[0]);
         this.oScoreBoard.render();
       }
+
+      // fire events last
+      this.fire(Game.sGameStartEvent);
     },
 
     stop: function() {

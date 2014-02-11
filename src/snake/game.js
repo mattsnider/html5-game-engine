@@ -18,7 +18,9 @@ var GameSnake = (function () {
 
   $.extend(PowerUp, {
     DefaultClass: 'ge-board-snake-pu',
-    DefaultPoints: 10
+    DefaultPoints: 10,
+    sBeforePowerUpEvent: 'beforePowerUpEvent',
+    sPowerUpEvent: 'powerUpEvent'
   });
 
   return $.MS.extend(function GameSnake(el, oConf) {
@@ -36,8 +38,6 @@ var GameSnake = (function () {
     this.aAssets.push(oBoard);
     this.aAssets.push(oCharacter);
     this.iDirection = 39;
-
-    this.on(Game.sGameStartEvent, this._handleGameStart);
   }, Game, {
 
     // left
@@ -71,6 +71,7 @@ var GameSnake = (function () {
       }
     },
 
+    // @override
     _cycle: function() {
       this.super(Game, arguments, '_cycle');
 
@@ -112,8 +113,23 @@ var GameSnake = (function () {
       return this.assets(PowerUp)[0];
     },
 
+    // @Override
     _handleGameStart: function() {
+      this.super(Game, arguments, '_handleGameStart');
       this.addPowerup();
+    },
+
+    /**
+     * Called by the move method to handle when the user interacts with
+     * the powerup.
+     * @private
+     */
+    _handlePowerUp: function() {
+      this.fire(Game.sPointEvent, PowerUp.DefaultPoints);
+      this.getCharacter().increaseSize();
+      // get another powerup
+      this.getBoard().renderOut(this.getPowerUp());
+      this.renderPowerUp();
     },
 
     /**
@@ -147,19 +163,12 @@ var GameSnake = (function () {
       oCharacter = this.getCharacter();
       oBoard.renderOut(oCharacter);
 
-      if (bPowerUp) {
-        this.fire(Game.sPointEvent, PowerUp.DefaultPoints);
-        oCharacter.increaseSize();
+      if (bPowerUp && false !== this.fire(PowerUp.sBeforePowerUpEvent)) {
+        this.fire(PowerUp.sPowerUpEvent);
       }
 
       oCharacter.position(iX, iY);
       oBoard.renderIn(oCharacter);
-
-      // get another powerup
-      if (bPowerUp) {
-        oBoard.renderOut(oPowerUp);
-        this.renderPowerUp();
-      }
     },
 
     /**
@@ -204,6 +213,20 @@ var GameSnake = (function () {
           oBoard, this.getCharacter().position());
       oPowerUp.position(aPos[0], aPos[1]);
       oBoard.renderIn(oPowerUp);
+    },
+
+    // @Override
+    reset: function() {
+      // prevent duplicate listeners
+      this.off(Game.sGameStartEvent, this._handleGameStart);
+      this.off(PowerUp.sPowerUpEvent, this._handlePowerUp);
+
+      // register events as part of start
+      this.on(Game.sGameStartEvent, this._handleGameStart);
+      this.on(PowerUp.sPowerUpEvent, this._handlePowerUp);
+
+      // local listeners need to be handled before calling super
+      this.super(Game, arguments, 'reset');
     }
   });
 }());
