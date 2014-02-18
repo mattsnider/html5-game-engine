@@ -125,7 +125,7 @@
     extend: function(ClassSub, ClassSuper,
                      oMixins/*, additional objects to mix in*/) {
       // inherit prototype of superclass
-      ClassSub.prototype = new ClassSuper();
+      ClassSub.prototype = Object.create(ClassSuper.prototype);
       // reference to constructor
       ClassSub.prototype.constructor = ClassSub;
       // reference to parent class

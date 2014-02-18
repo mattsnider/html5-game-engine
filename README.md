@@ -12,8 +12,8 @@ More to come
 
 ### v0.2.0
 * ~~Score~~
-* Stages - the map can change on certain events and stage-related events
-* Snake V2 - map changes every 5 powerups
+* ~~Stages - the map can change on certain events and stage-related events~~
+* ~~Snake V2 - map changes every 5 powerups~~
 
 ### v0.2.5
 * Maze game - a second, but relatively simple game using the engine

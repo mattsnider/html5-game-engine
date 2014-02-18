@@ -2,18 +2,17 @@ var BoardSnake = (function () {
   'use strict';
 
   var Boundary = $.MS.extend(function Boundary(el, oConf) {
-    // initialize local shorthand
-    var oCfg = oConf || {};
     this.super(BoardObject, arguments);
 
     // allow applications to overwrite the default class
-    this.sBoundaryCssClass =
-    oCfg.sBoundaryCssClass || Boundary.DefaultClass;
+    if (undefined === this.oCfg.sBoundaryCssClass) {
+      this.oCfg.sBoundaryCssClass = Boundary.DefaultClass;
+    }
   }, BoardObject, {
     // @override
     getCellClass: function () {
       return this.super(BoardObject, arguments, 'getCellClass') + ' ' +
-             this.sBoundaryCssClass;
+             this.oCfg.sBoundaryCssClass;
     }
   });
 
@@ -22,7 +21,14 @@ var BoardSnake = (function () {
   });
 
   var BoardSnake = $.MS.extend(function BoardSnake(el, oConf) {
-    this.super(Board, arguments);
+    // ensure the map is defined, will modify argument
+    oConf = oConf || {};
+    if (!oConf.map) {
+      oConf.map = {};
+    }
+    $.extend(oConf.map, BoardSnake.DefaultMapOptions);
+
+    this.super(Board, [el, oConf]);
   }, Board, {
     iXLen: 25,
     iYLen: 25,
@@ -32,10 +38,10 @@ var BoardSnake = (function () {
 
     // @override
     generateMap: function (oOpts) {
-      var oOptions = oOpts || {};
-      var aExcludedPositions = oOpts.aExcludedPositions || [];
+      var oOptions = this.oCfg.map || {};
+      $.extend(oOptions, oOpts);
+      var aExcludedPositions = oOptions.aExcludedPositions || [];
       var bHasExcludedPositions = !!aExcludedPositions.length;
-      $.extend(oOptions, BoardSnake.DefaultMapOptions);
       var aMap = this.super(Board, [oOptions], 'generateMap');
       // max number of cycles, in case iNumInternalWall is ridiculously large,
       // zero is used to indicate no internal walls should be built
@@ -61,7 +67,6 @@ var BoardSnake = (function () {
         }
       }
 
-      var iNumPowerUp = oOptions.iNumPowerUp;
       return aMap;
     },
 
@@ -91,7 +96,7 @@ var BoardSnake = (function () {
     DefaultMapOptions: {
       aExcludedPositions: null,
       bApplyBorder: true,
-      iNumPowerUp: 1,
+      iNumPowerUp: 1, // todo: use this variable
       iNumInternalWall: 5
     }
   });

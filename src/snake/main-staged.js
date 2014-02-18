@@ -1,8 +1,7 @@
-// todo: generify this... probably a game controller of some kind.
 (function() {
   'use strict';
 
-  var game = new GameSnake();
+  var game = new GameSnakeStaged();
   game.start();
 
   // todo: move this into a game controller system

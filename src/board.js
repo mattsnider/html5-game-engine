@@ -6,11 +6,9 @@ var Board = (function () {
   }
 
   function Board(el, oConf) {
-    // initialize local shorthand
-    var oCfg = oConf || {};
-
     // prepare the root node
     this.$node = $(el);
+    this.oCfg = oConf || {};
 
     // initialize from configuration
 //    this.iCellHeight = this.$node.width() / this.iHeight;
@@ -84,7 +82,8 @@ var Board = (function () {
      */
     generateMap: function (oOpts) {
       var aMap = [];
-      var oOptions = oOpts || {};
+      var oOptions = this.oCfg.map || {};
+      $.extend(oOptions, oOpts);
       var bApplyBorder = oOptions.bApplyBorder;
       var aRow, i, j;
 
@@ -231,6 +230,7 @@ var Board = (function () {
     render: function() {
       var that = this;
       var aNodes = [];
+      this.oBoardObjects = {};
 
       that.$node.css('visibility', 'hidden');
       that.oMatrix = [];

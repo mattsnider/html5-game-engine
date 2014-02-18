@@ -3,13 +3,19 @@ var BoardObject = (function () {
 
   function BoardObject(oConf) {
     // initialize local shorthand
-    var oCfg = oConf || {};
+    this.oCfg = oConf || {};
 
     // allow applications to overwrite the default class
-    this.sBoardObjectCssClass =
-        oCfg.boardObjectCssClass || BoardObject.DefaultClass;
+    if (undefined === this.oCfg.boardObjectCssClass) {
+      this.oCfg.boardObjectCssClass = BoardObject.DefaultClass;
+    }
 
-    this.aPosition = oCfg.aPosition || BoardObject.DefaultStartPos;
+    // allow applications to overwrite the default start position
+    if (undefined === this.oCfg.aPosition) {
+      this.oCfg.aPosition = BoardObject.DefaultStartPos;
+    }
+
+    this.aPosition = this.oCfg.aPosition;
   }
 
   $.extend(BoardObject, {
@@ -25,7 +31,7 @@ var BoardObject = (function () {
      * @return {String|BoardObject.DefaultClass}
      */
     getCellClass: function() {
-      return this.sBoardObjectCssClass;
+      return this.oCfg.sBoardObjectCssClass;
     },
 
     /**

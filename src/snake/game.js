@@ -62,13 +62,17 @@ var GameSnake = (function () {
 
     /**
      * Add a powerup to the board, if not already there.
+     * @return {boolean} A PowerUp was added.
      */
     addPowerup: function() {
       if (!this.getPowerUp()) {
         var oPowerUp = new PowerUp();
         this.aAssets.push(oPowerUp);
         this.renderPowerUp();
+        return true;
       }
+
+      return false;
     },
 
     // @override
